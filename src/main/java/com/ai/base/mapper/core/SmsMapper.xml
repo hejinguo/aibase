@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ai.base.mapper.core.SmsMapper">
+    <!-- 	<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/> -->
+	
+	<!-- 发送登陆验证码短信 -->
+	<insert id="sendLoginMark">
+		INSERT INTO DB2INST1.T_PUSH_SMS
+		(PHONE_NO,CONTENT,HOPE_SEND_TIME)
+		VALUES
+		(#{phoneNo},'【ESOP】您的登陆验证码为『${loginMark}』,如非本人操作请忽略',CURRENT TIMESTAMP)
+	</insert>
+	
+	<!-- 发送通用性质短信 -->
+	<insert id="sendCommonMsg">
+		INSERT INTO DB2INST1.T_PUSH_SMS
+		(PHONE_NO,CONTENT,HOPE_SEND_TIME)
+		VALUES
+		(#{phoneNo},'【ESOP】${content}',CURRENT TIMESTAMP)
+	</insert>
+</mapper>

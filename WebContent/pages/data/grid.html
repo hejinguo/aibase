@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>P</title>
+		<link href="../../resources/common/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../resources/common/layout/layout-default-latest.css" rel="stylesheet">
+		<link href="../../resources/css/ai.core.css" rel="stylesheet">
+	    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	    <!--[if lt IE 9]>
+	      <script src="../../resources/common/html5shiv/html5shiv.min.js" type="text/javascript"></script>
+	      <script src="../../resources/common/respond/respond.min.js" type="text/javascript"></script>
+	    <![endif]-->
+	    <link href="../../resources/css/data/grid.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="ui-layout-north">
+			<form class="form-inline" id="_dgrid_query_from"></form>
+		</div>
+		<div class="ui-layout-center">
+			<div id="_dgrid_query_table"></div>
+		</div>
+		<div class="ui-layout-south">
+			<div id="_dgrid_query_pagination"></div>
+		</div>
+		
+		<!-- ModalDialog -->
+		<div class="modal fade bs-example-modal-lg" id="_grid_iframe_modal_dialog" tabindex="-1" role="dialog" aria-labelledby="_grid_title_modal_label">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<!-- <div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="_grid_title_modal_label">write</h4>
+					</div> -->
+					<div class="modal-body">
+						<iframe style="width:100%;height:100px;border:0px;background:#EEE;" src=""></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	    <script src="../../resources/common/jquery/jquery.min.js" type="text/javascript"></script>
+	    <!-- Include all compiled plugins (below), or include individual files as needed -->
+	    <script src="../../resources/common/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+	    <script src="../../resources/common/layout/jquery.layout-latest.js" type="text/javascript"></script>
+	    <script src="../../resources/common/art-template/art-template.min.js" type="text/javascript"></script>
+	    <script src="../../resources/common/layer/layer.js" type="text/javascript"></script>
+	    <!--[if lt IE 9]>
+    		<script src="../../resources/common/json/json2.js"></script>
+		<![endif]--><!--使得IE8支持JSON.stringify-->
+	    <script src="../../resources/js/ai.core.js" type="text/javascript"></script>
+	    <script src="../../resources/js/data/grid.js" type="text/javascript"></script>
+	    <script id="_dgrid_query_from_template" type="text/html">
+			{{each define.conditions as condition c}}
+				<div class="form-group">
+					<label for="_dgrid_query_{{condition.code}}">{{condition.name}}</label>
+					<input type="text" class="form-control input-sm" name="{{condition.code}}" id="_dgrid_query_{{condition.code}}" placeholder="请输入{{condition.name}}">
+				</div>
+			{{/each}}
+			<button type="button" class="btn btn-success btn-sm" onclick="javascript:clickDGridQueryBtn();">
+				<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+				查询
+				</button>
+			<button type="reset" class="btn btn-default btn-sm">
+				<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+				重置
+			</button>
+		</script>
+		<script id="_dgrid_query_table_template" type="text/html">
+			<table class="table table-bordered table-hover table-condensed">
+				<thead>
+					<tr>
+						{{each define.fields as field f}}
+							<th nowrap="nowrap" style="{{field.width ? 'width:'+field.width+';' : ''}}">
+								{{field.name}}
+								{{if field.title}}
+									<span class="glyphicon glyphicon-info-sign text-primary" aria-hidden="true"
+										data-toggle="tooltip" data-placement="bottom" title="{{field.title}}"></span>
+								{{/if}}
+							</th>
+						{{/each}}
+					</tr>
+				</thead>
+				<tbody>
+					{{each data.list as row r}}
+						<tr>
+							{{each define.fields as field f}}
+								{{if field.code}}
+									<td nowrap="nowrap">{{row[field.code]}}</td>
+								{{else if field.dataType && field.dataType.toUpperCase()=='BUTTON'}}
+									<td style="padding:5px;">
+										{{each define.buttons as button b}}
+											<button type="button" onclick="javascript:clickRowBtnEvent({{r}},{{b}});"
+												class="btn btn-default btn-xs {{button.classs ? button.classs : ''}}">
+												{{button.text}}
+											</button>
+										{{/each}}
+									</td>
+								{{/if}}
+							{{/each}}
+						</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</script>
+		<script id="_dgrid_query_pagination_template" type="text/html">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-6">
+						<div style="padding-top:5px;">共{{data.total}}条记录,第{{data.pageNum}}页/共{{data.pages}}页 </div>
+					</div>
+					<div class="col-sm-6 text-right">
+						<nav aria-label="Page navigation">
+							<ul class="pagination pagination-sm">
+								<li class="{{data.hasPreviousPage ? '' : 'disabled'}}"><a href="javascript:clickChangePageNumBtn({{data.prePage}});" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+								{{each data.navigatepageNums as value i}}
+									<li class="{{data.pageNum == value ? 'active' : ''}}"><a href="javascript:clickChangePageNumBtn({{value}});">{{value}}</a></li>
+								{{/each}}
+								<li class="{{data.hasNextPage ? '' : 'disabled'}}"><a href="javascript:clickChangePageNumBtn({{data.nextPage}});" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</script>
+	</body>
+</html>

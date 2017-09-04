@@ -1,0 +1,28 @@
+/* 
+.layout-north-panel{
+	overflow:auto;
+	background:#FFF;
+	padding:0px;
+}
+
+.layout-center-panel{
+	overflow:auto;
+	background:#FFF;
+}
+
+.layout-south-panel{
+	overflow:auto;
+	background:#FFF;
+	padding:0px;
+}
+ */
+ 
+.modal-lg{
+	width:90%;
+}
+.modal-dialog{
+	margin:20px auto;
+}
+.modal-body{
+	padding:5px 5px 1px 5px;
+}

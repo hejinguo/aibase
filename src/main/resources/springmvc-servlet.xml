@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans-4.2.xsd   
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.2.xsd
+    http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
+
+	<!-- 自动扫描的包名 -->
+	<context:component-scan base-package="com.ai.base.controller,com.ai.base.tool.aop"></context:component-scan><!-- com.ai.base.controller, -->
+
+	<!-- 默认的注解映射的支持 -->
+	<mvc:annotation-driven/>
+	
+	<!-- 加入Aspectj配置 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<!-- 视图解释类 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/pages/" />
+		<property name="suffix" value=".jsp" /><!--可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑 -->
+<!-- 	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" /> -->
+	</bean>
+	
+	<!-- 对上传的支持 
+	   需要commons-fileupload.jar和commons-io.jar的支持  
+	   设置(multipart渲染器)  multipart就是file upload  
+	  限定上传文件大小为10M:10485760,5M:5242880
+	-->  
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <property name="defaultEncoding" value="utf-8"></property>
+        <property name="maxUploadSize" value="10485760"></property>
+        <property name="maxInMemorySize" value="40960"></property>
+   </bean> 
+
+	<!-- 拦截器-->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+<!-- 			<mvc:exclude-mapping path="/base/sendMark"/>
+			<mvc:exclude-mapping path="/base/login"/>
+			<mvc:exclude-mapping path="/base/qrCode"/>
+			<mvc:exclude-mapping path="/base/getUser"/> -->
+			<mvc:exclude-mapping path="/base/inteLogin"/>
+			<mvc:exclude-mapping path="/base/inteLogout"/>
+			<mvc:exclude-mapping path="/pages/base/login.html"/>
+			<mvc:exclude-mapping path="/pages/error/**"/>
+			<mvc:exclude-mapping path="/pages/report/**"/>
+			<mvc:exclude-mapping path="/resources/**"/>
+			<bean class="com.ai.base.interceptor.LoginVerificationInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	<!--  
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/index.html"/>
+			<mvc:exclude-mapping path="/pages/**"/>
+			<mvc:exclude-mapping path="/resources/**"/>
+			<bean class="com.ai.esop.tool.interceptor.CharacterFilterInterceptor" />
+		</mvc:interceptor>
+	-->
+	
+	<!-- 对静态资源文件的访问 -->
+	<mvc:default-servlet-handler />
+<!-- 	<mvc:resources location="/resources/" mapping="/resources/**" /> -->
+</beans>

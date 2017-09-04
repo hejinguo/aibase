@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ai.base.mapper.core.DataDictMapper">
+    <!-- 	<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/> -->
+    
+    <resultMap id="selectItemResult" type="com.ai.base.tool.vo.SelectItem">
+		<result column="DICT_NAME" property="text"/>
+		<result column="DICT_CODE" property="value"/>
+	</resultMap>
+	
+	<resultMap id="dataDictResult" type="com.ai.base.model.core.DataDict">
+		<result column="TYPE_CODE" property="typeCode"/>
+		<result column="TYPE_NAME" property="typeName"/>
+		<result column="DICT_CODE" property="dictCode"/>
+		<result column="DICT_NAME" property="dictName"/>
+		<result column="DICT_STATE" property="dictState"/>
+		<result column="SHOW_ORDER" property="showOrder"/>
+	</resultMap>
+	
+	<!-- 通过字典类型编码获取数据字典选项控件 -->
+	<select id="getSelectItemByType" resultMap="selectItemResult">
+		SELECT DICT_CODE,DICT_NAME
+		FROM AIPLUS.DIM_DATA_DICT
+		WHERE DICT_STATE = 1 AND TYPE_CODE = #{typeCode}
+		ORDER BY SHOW_ORDER
+	</select>
+	
+	<!-- 通过字典类型编码获取数据字典对象 -->
+	<select id="getDataDictByType" resultMap="dataDictResult">
+		SELECT TYPE_CODE,TYPE_NAME,DICT_CODE,DICT_NAME,DICT_STATE,SHOW_ORDER
+		FROM AIPLUS.DIM_DATA_DICT 
+		WHERE DICT_STATE = 1 AND TYPE_CODE = #{typeCode}
+		ORDER BY SHOW_ORDER
+	</select>
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ai.base.mapper.core.UserMapper">
+    <!-- 	<cache type="org.mybatis.caches.ehcache.LoggingEhcache" readOnly="true"/> -->
+
+    <resultMap id="userResult" type="com.ai.base.model.core.User">
+        <result column="STAFF_ID" property="staffId"/>
+        <result column="STAFF_CODE" property="staffCode"/>
+        <result column="STAFF_NAME" property="staffName"/>
+        <result column="PHONE_NO" property="phoneNo"/>
+        <result column="PHOTO_ADDR" property="photoAddr"/>
+        <result column="LAST_LOGIN_MARK" property="lastLoginMark"/>
+        <result column="LAST_LOGIN_TOKEN" property="lastLoginToken"/>
+        <result column="LAST_LOGIN_TIME" property="lastLoginTime"/>
+        <result column="STATE" property="state"/>
+        <result column="ORG_CODE" property="manage.orgId"/>
+        <result column="ORG_NAME" property="manage.orgName"/>
+        <result column="ORG_NAME" property="manage.orgAbbr"/>
+        <result column="ORG_TYPE" property="manage.orgType"/>
+        <result column="ORG_STATE" property="manage.state"/>
+        <result column="REGION_ID" property="region.orgId"/>
+        <result column="REGION_NAME" property="region.orgName"/>
+        <result column="REGION_ABBR" property="region.orgAbbr"/>
+        <result column="REGION_TYPE" property="region.orgType"/>
+        <result column="REGION_STATE" property="region.state"/>
+        <collection property="roles" ofType="com.ai.base.model.core.Role">
+        	<result column="ROLE_ID" property="roleId"/>
+        	<result column="ROLE_TYPE" property="roleType"/>
+        	<result column="ROLE_NAME" property="roleName"/>
+        </collection>
+    </resultMap>
+
+    <!-- 通过手机号码获取用户表信息 -->
+    <select id="getUserByPhoneNo" resultMap="userResult" parameterType="string">
+		SELECT A.*,B.ORG_CODE,B.ORG_NAME,CASE WHEN B.ORG_LEVEL &lt; 5 THEN B.ORG_LEVEL ELSE 0 END ORG_TYPE,1 ORG_STATE,
+			C.ORG_ID REGION_ID,C.ORG_NAME REGION_NAME,C.ORG_ABBR REGION_ABBR,C.ORG_TYPE REGION_TYPE,C.STATE REGION_STATE,
+			E.ROLE_ID,E.ROLE_NAME,E.ROLE_TYPE
+		FROM AIPLUS.CFG_SYS_STAFF A 
+		LEFT JOIN DB2INST1.SYS_ORG_LVL_LATEST_CRM B ON A.ORGANIZE_ID=B.ORG_CODE
+		LEFT JOIN AIPLUS.CFG_SYS_ORG C ON A.REGION_ID=C.ORG_ID
+		LEFT JOIN AIPLUS.CFG_SYS_STAFF_ROLE_REL D ON A.STAFF_ID=D.STAFF_ID
+		LEFT JOIN AIPLUS.CFG_SYS_ROLE E ON D.ROLE_ID=E.ROLE_ID
+		WHERE A.PHONE_NO=#{phoneNo} ORDER BY A.ORGANIZE_ID
+	</select>
+    <!-- 通过登陆工号获取用户表信息 -->
+    <select id="getUserByStaffCode" resultMap="userResult" parameterType="string">
+		SELECT A.*,B.ORG_CODE,B.ORG_NAME,CASE WHEN B.ORG_LEVEL &lt; 5 THEN B.ORG_LEVEL ELSE 0 END ORG_TYPE,1 ORG_STATE,
+			C.ORG_ID REGION_ID,C.ORG_NAME REGION_NAME,C.ORG_ABBR REGION_ABBR,C.ORG_TYPE REGION_TYPE,C.STATE REGION_STATE,
+			E.ROLE_ID,E.ROLE_NAME,E.ROLE_TYPE
+		FROM AIPLUS.CFG_SYS_STAFF A 
+		LEFT JOIN DB2INST1.SYS_ORG_LVL_LATEST_CRM B ON A.ORGANIZE_ID=B.ORG_CODE
+		LEFT JOIN AIPLUS.CFG_SYS_ORG C ON A.REGION_ID=C.ORG_ID
+		LEFT JOIN AIPLUS.CFG_SYS_STAFF_ROLE_REL D ON A.STAFF_ID=D.STAFF_ID
+		LEFT JOIN AIPLUS.CFG_SYS_ROLE E ON D.ROLE_ID=E.ROLE_ID
+		WHERE A.STAFF_CODE=#{staffCode} ORDER BY A.ORGANIZE_ID
+	</select>
+    <!-- 根据用户ID获取用户信息 -->
+    <select id="getUserByStaffId" resultMap="userResult" parameterType="long">
+		SELECT A.*,B.ORG_CODE,B.ORG_NAME,CASE WHEN B.ORG_LEVEL &lt; 5 THEN B.ORG_LEVEL ELSE 0 END ORG_TYPE,1 ORG_STATE,
+			C.ORG_ID REGION_ID,C.ORG_NAME REGION_NAME,C.ORG_ABBR REGION_ABBR,C.ORG_TYPE REGION_TYPE,C.STATE REGION_STATE,
+			E.ROLE_ID,E.ROLE_NAME,E.ROLE_TYPE
+		FROM AIPLUS.CFG_SYS_STAFF A 
+		LEFT JOIN DB2INST1.SYS_ORG_LVL_LATEST_CRM B ON A.ORGANIZE_ID=B.ORG_CODE
+		LEFT JOIN AIPLUS.CFG_SYS_ORG C ON A.REGION_ID=C.ORG_ID
+		LEFT JOIN AIPLUS.CFG_SYS_STAFF_ROLE_REL D ON A.STAFF_ID=D.STAFF_ID
+		LEFT JOIN AIPLUS.CFG_SYS_ROLE E ON D.ROLE_ID=E.ROLE_ID
+		WHERE A.STAFF_ID=#{staffId}
+	</select>
+    <!-- 根据Token获得用户信息 -->
+    <select id="getUserByToken" resultMap="userResult" parameterType="string">
+		<!--
+		SELECT A.*,B.ORG_CODE,B.ORG_NAME,CASE WHEN B.ORG_LEVEL &lt; 5 THEN B.ORG_LEVEL ELSE 0 END ORG_TYPE,1 ORG_STATE,
+			C.ORG_ID REGION_ID,C.ORG_NAME REGION_NAME,C.ORG_ABBR REGION_ABBR,C.ORG_TYPE REGION_TYPE,C.STATE REGION_STATE,
+			E.ROLE_ID,E.ROLE_NAME,E.ROLE_TYPE
+		FROM AIPLUS.CFG_SYS_STAFF A 
+		LEFT JOIN DB2INST1.SYS_ORG_LVL_LATEST_CRM B ON A.ORGANIZE_ID=B.ORG_CODE
+		LEFT JOIN AIPLUS.CFG_SYS_ORG C ON A.REGION_ID=C.ORG_ID
+		LEFT JOIN AIPLUS.CFG_SYS_STAFF_ROLE_REL D ON A.STAFF_ID=D.STAFF_ID
+		LEFT JOIN AIPLUS.CFG_SYS_ROLE E ON D.ROLE_ID=E.ROLE_ID
+		WHERE A.LAST_LOGIN_TOKEN=#{loginToken} 
+		-->
+		SELECT A.*,B.ORG_CODE,B.ORG_NAME,CASE WHEN B.ORG_LEVEL &lt; 5 THEN B.ORG_LEVEL ELSE 0 END ORG_TYPE,1 ORG_STATE,
+			C.ORG_ID REGION_ID,C.ORG_NAME REGION_NAME,C.ORG_ABBR REGION_ABBR,C.ORG_TYPE REGION_TYPE,C.STATE REGION_STATE,
+			E.ROLE_ID,E.ROLE_NAME,E.ROLE_TYPE
+		FROM AIPLUS.CFG_SYS_STAFF_TOKEN T
+		LEFT JOIN AIPLUS.CFG_SYS_STAFF A ON T.STAFF_ID=A.STAFF_ID
+		LEFT JOIN DB2INST1.SYS_ORG_LVL_LATEST_CRM B ON A.ORGANIZE_ID=B.ORG_CODE
+		LEFT JOIN AIPLUS.CFG_SYS_ORG C ON A.REGION_ID=C.ORG_ID
+		LEFT JOIN AIPLUS.CFG_SYS_STAFF_ROLE_REL D ON A.STAFF_ID=D.STAFF_ID
+		LEFT JOIN AIPLUS.CFG_SYS_ROLE E ON D.ROLE_ID=E.ROLE_ID
+		WHERE T.LOGIN_TOKEN=#{loginToken}
+	</select>
+</mapper>

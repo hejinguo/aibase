@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+		<!-- 定义用于Mybatis的全局变量信息 -->
+		<property name="AIPLUS_SCHEMA" value="AIPLUS"/>
+	</properties>
+	
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="defaultExecutorType" value="REUSE" />
+		<setting name="defaultStatementTimeout" value="25000" />
+	</settings>
+	
+	<plugins>
+		<!-- com.github.pagehelper为PageHelper类所在包名 -->
+		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+			<property name="helperDialect" value="db2" /><!-- 指定分页插件使用的方言 -->
+			<property name="reasonable" value="true" /><!-- 分页合理化参数 -->
+			<property name="autoRuntimeDialect" value="true" /><!-- 根据多数据源自动识别对应方言的分页 -->
+			<!-- supportMethodsArguments=true -->
+		</plugin>
+	</plugins>
+</configuration>
