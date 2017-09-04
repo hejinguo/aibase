@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ai.base.model.data.Grid;
 import com.ai.base.service.data.GridService;
 import com.ai.base.tool.FTPTool;
+import com.ai.base.tool.FileTool;
+import com.ai.base.tool.PropertiesTool;
 import com.ai.base.tool.StringUtils;
 import com.ai.base.tool.datasource.DbContextHolder;
 import com.ai.base.tool.vo.ResultObject;
@@ -32,9 +34,17 @@ public class GridController {
 			HttpServletRequest request){
 		Grid grid = null;
 	    try {
+	    	String define = null;//No.1:FTP文件,No.2:APP文件,No.3：数据库
+	    	PropertiesTool instance = PropertiesTool.getInstance();
+	    	if("FTP".equalsIgnoreCase(instance.get("source.type"))){
+	    		define = FTPTool.readFile("grid", code+".txt");
+	    	}else if("APP".equalsIgnoreCase(instance.get("source.type"))){
+	    		define = FileTool.readResourceFile("grid", code+".txt");
+	    	}else if("DB".equalsIgnoreCase(instance.get("source.type"))){
+	    		define = "";
+	    	}
 	    	ObjectMapper mapper = new ObjectMapper();
 	    	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);//忽略不需要的多余字段
-	    	String define = FTPTool.readFile("grid", code+".txt");//1:文件，2：数据库
 	    	grid = mapper.readValue(define, Grid.class);
 	    	if(!StringUtils.isEmpty(grid.getDataSource())){
 	    		DbContextHolder.setDbType(grid.getDataSource());
