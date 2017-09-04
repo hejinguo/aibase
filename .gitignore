@@ -1,5 +1,4 @@
-/target/classes
+/target
 /.settings
 /*.project
 /*.classpath
-/target/test-classes
