@@ -2,4 +2,4 @@
 /.settings
 /*.project
 /*.classpath
-/target/test-classes/com/ai/base
+/target/test-classes
