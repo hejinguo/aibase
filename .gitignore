@@ -1,0 +1,5 @@
+/target/classes
+/.settings
+/*.project
+/*.classpath
+/target/test-classes/com/ai/base
