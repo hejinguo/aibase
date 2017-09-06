@@ -17,8 +17,7 @@ public class Grid implements Serializable {
 	private String desc;//描述信息
 	private List<Condition> conditions;//查询条件
 	private List<Field> fields;//显示列字段
-	private List<Button> buttons;//功能操作按钮
-	private Page page;//是否分页,分页控件属性
+	private Page page;//是否分页,分页控件属性(为null即代表不需要分页功能)
 	
 	public String getCode() {
 		return code;
@@ -62,15 +61,10 @@ public class Grid implements Serializable {
 	public void setFields(List<Field> fields) {
 		this.fields = fields;
 	}
-	public List<Button> getButtons() {
-		return buttons;
+	public Page getPage() {
+		return page;
 	}
-	public void setButtons(List<Button> buttons) {
-		this.buttons = buttons;
-	}
-	@Override
-	public String toString() {
-		return "Grid [code=" + code + ", name=" + name + ", table=" + table + ", dataSource=" + dataSource + ", desc="
-				+ desc + ", conditions=" + conditions + ", fields=" + fields + ", buttons=" + buttons + "]";
+	public void setPage(Page page) {
+		this.page = page;
 	}
 }

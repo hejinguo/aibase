@@ -30,7 +30,7 @@ public class GridController {
 	
 	@RequestMapping("/getDataInfo")
 	public Object getDataInfo(@RequestParam(required=true)String code,
-			@RequestParam(defaultValue="1")int pageNum,@RequestParam(defaultValue="10")int pageSize,
+			@RequestParam(defaultValue="1")int pageNum,@RequestParam(defaultValue="-1")int pageSize,
 			HttpServletRequest request){
 		Grid grid = null;
 	    try {

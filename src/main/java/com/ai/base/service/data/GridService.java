@@ -43,28 +43,58 @@ public class GridService {
 			if(!StringUtils.isEmpty(conditionValue)){
 				if(!StringUtils.isEmpty(condition.getDataType()) 
 						&& "STRING".equalsIgnoreCase(condition.getDataType())){
-					if(condition.getWay() == 2){//模糊查询
+					if(condition.isFuzzyWay()){//模糊查询
 						sb.append(" AND "+condition.getCode()+" ");
-						sb.append(" LIKE '%"+conditionValue+"%'");
+						if(StringUtils.isEmpty(condition.getSymbol())){
+							sb.append(" LIKE ");
+						}else{
+							sb.append(" "+condition.getSymbol()+" ");
+						}
+						sb.append(" '%"+conditionValue+"%'");
 					}else{//精确查询
 						sb.append(" AND "+condition.getCode()+" ");
-						sb.append(" = '"+conditionValue+"'");
+						if(StringUtils.isEmpty(condition.getSymbol())){
+							sb.append(" = ");
+						}else{
+							sb.append(" "+condition.getSymbol()+" ");
+						}
+						sb.append(" '"+conditionValue+"'");
 					}
 				}else if(!StringUtils.isEmpty(condition.getDataType()) 
 						&& "NUMBER".equalsIgnoreCase(condition.getDataType())){
-					if(condition.getWay() == 2){//模糊查询
+					if(condition.isFuzzyWay()){//模糊查询
 						sb.append(" AND TRIM(CHAR("+condition.getCode()+")) ");
+						if(StringUtils.isEmpty(condition.getSymbol())){
+							sb.append(" LIKE ");
+						}else{
+							sb.append(" "+condition.getSymbol()+" ");
+						}
 						sb.append(" LIKE '%"+conditionValue+"%'");
 					}else{//精确查询
 						sb.append(" AND "+condition.getCode()+" ");
-						sb.append(" = "+conditionValue);
+						if(StringUtils.isEmpty(condition.getSymbol())){
+							sb.append(" = ");
+						}else{
+							sb.append(" "+condition.getSymbol()+" ");
+						}
+						sb.append(" "+conditionValue);
 					}
 				}
 			}
 		}
+		
 		System.out.println("AIBASE_DATA_SQL:"+sb.toString());
-		PageHelper.startPage(pageNum, pageSize);
+		
+		int btnNum = 5;//分页按钮组的数量
+		if(grid.getPage() != null){
+			if(pageSize < 1){//默认提供不合法的pageSize时取配置中默认值
+				pageSize = grid.getPage().getPageSize();
+			}
+			btnNum = grid.getPage().getBtnNum();
+			PageHelper.startPage(pageNum, pageSize);
+		}
+		//PageHelper.orderBy("countryname desc");
 		List<Map<String, Object>> rows = commonMapper.getResultBySql(sb.toString());
-		return new PageInfo<Map<String, Object>>(rows,5);
+		return new PageInfo<Map<String, Object>>(rows,btnNum);
 	}
 }
