@@ -59,10 +59,12 @@
 	    <script src="../../resources/js/data/grid.js" type="text/javascript"></script>
 	    <script id="_dgrid_query_from_template" type="text/html">
 			{{each define.conditions as condition c}}
-				<div class="form-group">
-					<label for="_dgrid_query_{{condition.code}}">{{condition.name}}</label>
-					<input type="text" class="form-control input-sm" name="{{condition.code}}" id="_dgrid_query_{{condition.code}}" placeholder="请输入{{condition.name}}">
-				</div>
+				{{if condition.widgetType.toUpperCase() != 'BUTTON'}}
+					<div class="form-group">
+						<label for="_dgrid_query_{{condition.code}}">{{condition.name}}</label>
+						<input type="text" class="form-control input-sm" name="{{condition.code}}" id="_dgrid_query_{{condition.code}}" placeholder="请输入{{condition.name}}">
+					</div>
+				{{/if}}
 			{{/each}}
 			<button type="button" class="btn btn-success btn-sm" onclick="javascript:clickDGridQueryBtn();">
 				<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -72,6 +74,15 @@
 				<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
 				重置
 			</button>
+			{{each define.conditions as condition c}}
+				{{if condition.widgetType.toUpperCase() == 'BUTTON'}}
+					<button type="button" onclick="javascript:alert(1);"
+							class="btn btn-default btn-sm {{condition.button.classs ? condition.button.classs : ''}}">
+						{{if condition.button.icon}}<span class="{{condition.button.icon}}" aria-hidden="true"></span>{{/if}}
+						{{condition.button.text}}
+					</button>
+				{{/if}}
+			{{/each}}
 		</script>
 		<script id="_dgrid_query_table_template" type="text/html">
 			<table class="table table-bordered table-hover table-condensed">

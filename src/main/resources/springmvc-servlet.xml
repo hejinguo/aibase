@@ -44,15 +44,17 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
-<!-- 			<mvc:exclude-mapping path="/base/sendMark"/>
+			<mvc:exclude-mapping path="/grid/**"/>
+			<mvc:exclude-mapping path="/pages/data/grid.html"/>
+			<!--
+			<mvc:exclude-mapping path="/base/sendMark"/>
 			<mvc:exclude-mapping path="/base/login"/>
 			<mvc:exclude-mapping path="/base/qrCode"/>
-			<mvc:exclude-mapping path="/base/getUser"/> -->
+			<mvc:exclude-mapping path="/base/getUser"/>
+			-->
 			<mvc:exclude-mapping path="/base/inteLogin"/>
 			<mvc:exclude-mapping path="/base/inteLogout"/>
-			<mvc:exclude-mapping path="/pages/base/login.html"/>
 			<mvc:exclude-mapping path="/pages/error/**"/>
-			<mvc:exclude-mapping path="/pages/report/**"/>
 			<mvc:exclude-mapping path="/resources/**"/>
 			<bean class="com.ai.base.interceptor.LoginVerificationInterceptor" />
 		</mvc:interceptor>

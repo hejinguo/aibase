@@ -43,6 +43,9 @@ public class GridController {
 	    	}else if("DB".equalsIgnoreCase(instance.get("source.type"))){
 	    		define = "";
 	    	}
+	    	
+	    	System.out.println(define);
+	    	
 	    	ObjectMapper mapper = new ObjectMapper();
 	    	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);//忽略不需要的多余字段
 	    	grid = mapper.readValue(define, Grid.class);
