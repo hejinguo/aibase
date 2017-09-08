@@ -1,5 +1,5 @@
 var pageData = {
-	param : {code:ai.getQueryString("code"),pageNum : 1,pageSize : 15},//查询参数
+	param : {code:ai.getQueryString("code"),pageNum : 1,pageSize : -1},//查询参数,pageSize<1代表采用后台配置的pageSize
 	first : true,//是否首次加载页面
 	grid : {}//缓存查询结果数据
 };
@@ -61,9 +61,10 @@ function clickChangePageNumBtn(pageNum){
  * @param rowIndex
  * @param btnIndex
  */
-function clickRowBtnEvent(rowIndex,btnIndex){
+function clickRowBtnEvent(rowIndex,fieldIndex,btnIndex){
 	var row = pageData.grid.data.list[rowIndex];
-	var btn = pageData.grid.define.buttons[btnIndex];
+	var btn = pageData.grid.define.fields[fieldIndex].buttons[btnIndex];
+//	var btn = pageData.grid.define.buttons[btnIndex];
 	if(btn.confirm){
 		ai.confirm('确认','您确定要进行'+btn.text+'操作吗？',function(){
 			handleRowBtnEvent(row,btn);

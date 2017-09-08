@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Field implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String code;//字段代码[dataType为Sequence、Button时留空即可]
+	private String code;//字段代码[dataType为Sequence、Button时此代码无效]
 	private String name;//字段名称-显示标题
 	private String title;//标记显示标题拓展信息
 	private String width;//宽度(像素:50px,百分比:50%)

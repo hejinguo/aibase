@@ -107,8 +107,8 @@
 									<td nowrap="nowrap">{{row[field.code]}}</td>
 								{{else if field.dataType && field.dataType.toUpperCase()=='BUTTON'}}
 									<td style="padding:5px;">
-										{{each define.buttons as button b}}
-											<button type="button" onclick="javascript:clickRowBtnEvent({{r}},{{b}});"
+										{{each field.buttons as button b}}
+											<button type="button" onclick="javascript:clickRowBtnEvent({{r}},{{f}},{{b}});"
 												class="btn btn-default btn-xs {{button.classs ? button.classs : ''}}">
 												{{button.text}}
 											</button>
