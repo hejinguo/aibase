@@ -15,7 +15,7 @@
 		{"code":"STAFF_ID","name":"ID","width":"","dataType":"Number","download":false,"orderby":"ASC"},
 		{"code":"STAFF_CODE","name":"µÇÂ¼¹¤ºÅ","dataType":"String","download":true},
 		{"code":"STAFF_NAME","name":"ÓÃ»§ĞÕÃû","dataType":"String","download":true},
-		{"code":"PHONE_NO","name":"ÊÖ»úºÅÂë","title":"ÊÖ»úºÅÂë","dataType":"String","download":true},
+		{"code":"PHONE_NO","name":"ÊÖ»úºÅÂë","title":"ÇëÎğËæÒâĞ¹Â¶ÓÃ»§µÄÊÖ»úºÅÂë","dataType":"String","download":true},
 		{"code":"STATE","name":"×´Ì¬","dataType":"Number","download":false},
 		{"name":"²Ù×÷","dataType":"Button","width":"170px","buttons":[
 			{"classs":"btn-primary","icon":"","text":"¼ìË÷","type":"dialog","confirm":false,"url":"https://www.baidu.com/s","params":["STAFF_NAME>wd","STAFF_ID>id"]},
