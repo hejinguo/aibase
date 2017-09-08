@@ -4,16 +4,19 @@
 	"table":"AIPLUS.CFG_SYS_STAFF",
 	"dataSource":"",
 	"conditions":[
-		{"code":"STAFF_CODE","name":"工号","dataType":"String","widgetType":"Text","fuzzyWay":true},
-		{"code":"STAFF_NAME","name":"姓名","dataType":"String","widgetType":"Text","fuzzyWay":true},
-		{"code":"PHONE_NO","name":"号码","dataType":"String","widgetType":"Text","fuzzyWay":true},
-		{"widgetType":"Button","button":{"text":"添加","classs":"btn-primary","icon":"glyphicon glyphicon-plus"}}
+		{"code":"STAFF_CODE","name":"登录工号","dataType":"String","widgetType":"Text","fuzzyWay":true},
+		{"code":"STAFF_NAME","name":"用户姓名","dataType":"String","widgetType":"Text","fuzzyWay":true},
+		{"code":"PHONE_NO","name":"手机号码","dataType":"String","widgetType":"Text","fuzzyWay":true},
+		{"widgetType":"Button","button":{
+			"classs":"btn-primary","icon":"glyphicon glyphicon-plus","text":"添加","type":"dialog","url":"https://www.baidu.com"
+		}}
 	],
 	"fields":[
 		{"code":"STAFF_ID","name":"ID","width":"","dataType":"Number","download":false,"orderby":"ASC"},
-		{"code":"STAFF_CODE","name":"工号","dataType":"String","download":false},
-		{"code":"STAFF_NAME","name":"姓名","dataType":"String","download":false},
-		{"code":"PHONE_NO","name":"号码","title":"手机号码","dataType":"String","download":false},
+		{"code":"STAFF_CODE","name":"登录工号","dataType":"String","download":true},
+		{"code":"STAFF_NAME","name":"用户姓名","dataType":"String","download":true},
+		{"code":"PHONE_NO","name":"手机号码","title":"手机号码","dataType":"String","download":true},
+		{"code":"STATE","name":"状态","dataType":"Number","download":false},
 		{"name":"操作","dataType":"Button","width":"170px","buttons":[
 			{"classs":"btn-primary","icon":"","text":"检索","type":"dialog","confirm":false,"url":"https://www.baidu.com/s","params":["STAFF_NAME>wd","STAFF_ID>id"]},
 			{"classs":"btn-info","icon":"","text":"详情","type":"window","confirm":true,"url":"https://www.baidu.com/s","params":[]},
@@ -22,5 +25,4 @@
 		]}
 	],
 	"page":{"pageSize":15}
-	
 }

@@ -76,7 +76,7 @@
 			</button>
 			{{each define.conditions as condition c}}
 				{{if condition.widgetType.toUpperCase() == 'BUTTON'}}
-					<button type="button" onclick="javascript:alert(1);"
+					<button type="button" onclick="javascript:clickConditionBtnEvent({{c}});"
 							class="btn btn-default btn-sm {{condition.button.classs ? condition.button.classs : ''}}">
 						{{if condition.button.icon}}<span class="{{condition.button.icon}}" aria-hidden="true"></span>{{/if}}
 						{{condition.button.text}}

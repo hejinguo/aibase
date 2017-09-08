@@ -16,7 +16,7 @@ public class Condition implements Serializable {
 	private String source;//查询条件数据源(Select[Redis:KEY,MTable:KEY,Script:SQL],Text[defaultValue])
 	private boolean fuzzyWay;//是否模糊匹配查询
 	private String symbol;//条件运算符(模糊查询默认为like,精确查询默认为=,可自定义为>、<、!=等情况)
-	private Button button;//dataType为Button的其他拓展按钮(如添加按钮)
+	private Button button;//widgetType为Button的其他拓展按钮(如添加按钮)
 	
 	public String getCode() {
 		return code;

@@ -57,6 +57,21 @@ function clickChangePageNumBtn(pageNum){
 }
 
 /**
+ * 点击查询控件位置的自定义按钮
+ * @param conditionIndex
+ */
+function clickConditionBtnEvent(conditionIndex){
+	var btn = pageData.grid.define.conditions[conditionIndex].button;
+	if(btn.confirm){
+		ai.confirm('确认','您确定要进行'+btn.text+'操作吗？',function(){
+			handleRowBtnEvent(null,btn);
+		});
+	}else{
+		handleRowBtnEvent(null,btn);
+	}
+}
+
+/**
  * 点击数据行中的操作类按钮
  * @param rowIndex
  * @param btnIndex
@@ -64,7 +79,6 @@ function clickChangePageNumBtn(pageNum){
 function clickRowBtnEvent(rowIndex,fieldIndex,btnIndex){
 	var row = pageData.grid.data.list[rowIndex];
 	var btn = pageData.grid.define.fields[fieldIndex].buttons[btnIndex];
-//	var btn = pageData.grid.define.buttons[btnIndex];
 	if(btn.confirm){
 		ai.confirm('确认','您确定要进行'+btn.text+'操作吗？',function(){
 			handleRowBtnEvent(row,btn);
@@ -80,29 +94,29 @@ function clickRowBtnEvent(rowIndex,fieldIndex,btnIndex){
  * @param btnObj
  */
 function handleRowBtnEvent(row,btn){
-//	alert(JSON.stringify(row));
-//	alert(JSON.stringify(btn));
 	var param = '';
-	if(btn.params){
-		var spts = [];
-		for(var i = 0;i < btn.params.length;i++){
-			spts = btn.params[i].split('>');
-			if(spts[0] && row[spts[0]] && spts[1]){
-				param += ((i>0?'&':'')+spts[1]+'='+row[spts[0]]);
+	if(row){//判断是否在处理行级的按钮事件
+		if(btn.params){
+			var spts = [];
+			for(var i = 0;i < btn.params.length;i++){
+				spts = btn.params[i].split('>');
+				if(spts[0] && row[spts[0]] && spts[1]){
+					param += ((i>0?'&':'?')+spts[1]+'='+row[spts[0]]);
+				}
 			}
 		}
 	}
-	alert(param);
+	//alert(param);
 	if(btn.type){//Dialog,Window,Redirect,Ajax
 		switch (btn.type.toUpperCase()) {
 		case 'WINDOW':
-			window.open(btn.url+'?'+param);
+			window.open(btn.url+param);
 			break;
 		case 'REDIRECT':
-			document.location.href=btn.url+'?'+param;
+			document.location.href=btn.url+param;
 			break;
 		case 'DIALOG':
-			_openGridCommonModalDialog(btn.url+'?'+param);
+			_openGridCommonModalDialog(btn.url+param);
 			break;
 		case 'AJAX':
 			ai.alert('尚未实现Ajax请求.');
