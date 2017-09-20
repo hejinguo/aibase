@@ -1,0 +1,20 @@
+{
+	"code":"bid",
+	"name":"证书统计",
+	"table":"(select a.name_ organize_name,c.certificate_type_ certificate_type,c.name_ certificate_name,
+				count(case when c.name_ is not null then c.name_ end) certificate_amount 
+			from t_enterprise a  left join t_enterprise_certificate b on a.id_=b.enterprise_id_ 
+			left join t_certificate c on b.certificate_id_=c.id_ group by a.name_,c.certificate_type_,c.name_) t ",
+	"dataSource":"dataSourceESOPHis",
+	"conditions":[
+		{"code":"organize_name","name":"机构名称","dataType":"String","widgetType":"Text","fuzzyWay":true},
+		{"code":"certificate_type","name":"证书类型","dataType":"String","widgetType":"Text","fuzzyWay":true}
+	],
+	"fields":[
+		{"code":"organize_name","name":"机构名称","width":"","dataType":"String","download":false,"orderby":"ASC"},
+		{"code":"certificate_type","name":"证书类型","dataType":"String","download":false},
+		{"code":"certificate_name","name":"证书名称","dataType":"String","download":false},
+		{"code":"certificate_amount","name":"证书数量","title":"","dataType":"String","download":false}
+	],
+	"page":{"pageSize":10}
+}

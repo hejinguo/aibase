@@ -18,6 +18,7 @@ import com.ai.base.tool.PropertiesTool;
 import com.ai.base.tool.StringUtils;
 import com.ai.base.tool.datasource.DbContextHolder;
 import com.ai.base.tool.vo.ResultObject;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
@@ -48,6 +49,7 @@ public class GridController {
 	    	
 	    	ObjectMapper mapper = new ObjectMapper();
 	    	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);//忽略不需要的多余字段
+	    	mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);//tab空格换行等控制字符
 	    	grid = mapper.readValue(define, Grid.class);
 	    	if(!StringUtils.isEmpty(grid.getDataSource())){
 	    		DbContextHolder.setDbType(grid.getDataSource());

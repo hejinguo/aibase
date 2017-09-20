@@ -1,19 +1,21 @@
 {
 	"code":"bid",
-	"name":"BID系统用户",
-	"table":"t_user",
+	"name":"客户招标情况统计",
+	"table":"(select a.name_ customer_name,DATE_FORMAT(c.sign_up_begin_,'%Y') bid_year,
+			count(case when b.id_ is not null then b.id_ end) bid_amount,0 bid_fee
+			from t_customer a left join t_bid_info b on a.id_=b.cust_id_
+			left join t_sign_up c on b.id_= c.bid_id_
+			group by a.name_,DATE_FORMAT(c.sign_up_begin_,'%Y')) t ",
 	"dataSource":"dataSourceESOPHis",
 	"conditions":[
-		{"code":"account_","name":"工号","dataType":"String","widgetType":"Text","fuzzyWay":true},
-		{"code":"name_","name":"姓名","dataType":"String","widgetType":"Text","fuzzyWay":true},
-		{"widgetType":"Button","button":{"text":"添加","classs":"btn-primary","icon":"glyphicon glyphicon-plus"}}
+		{"code":"customer_name","name":"客户名称","dataType":"String","widgetType":"Text","fuzzyWay":true},
+		{"code":"bid_year","name":"年度","dataType":"String","widgetType":"Text","fuzzyWay":true}
 	],
 	"fields":[
-		{"code":"id_","name":"ID","width":"","dataType":"Number","download":false,"orderby":"ASC"},
-		{"code":"account_","name":"工号","dataType":"String","download":false},
-		{"code":"name_","name":"姓名","dataType":"String","download":false},
-		{"code":"mobile_","name":"号码","title":"手机号码","dataType":"String","download":false}
+		{"code":"customer_name","name":"客户名称","width":"","dataType":"String","download":false,"orderby":"ASC"},
+		{"code":"bid_year","name":"年度","dataType":"String","download":false},
+		{"code":"bid_amount","name":"招标项目数","dataType":"Number","download":false},
+		{"code":"bid_fee","name":"招标金额","title":"","dataType":"Number","download":false}
 	],
 	"page":{"pageSize":10}
-	
 }
