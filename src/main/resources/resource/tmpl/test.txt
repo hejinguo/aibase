@@ -1,7 +1,7 @@
 {
 	"templateCode":"",
-	"templateName":"æµ‹è¯•",
-	"templateDesc":"æè¿°"
+	"templateName":"²âÊÔ",
+	"templateDesc":"ÃèÊö",
 	"templateGroup":[
 		{
 			"groupCode":"",
@@ -10,7 +10,7 @@
 			"tableSchema":"DB2INST1",
 			"tableName":"SYS_STAFF",
 			"groupDesc":"",
-			templateItem:[
+			"templateItem":[
 				{
 					"itemCode":"",
 					"itemName":"",

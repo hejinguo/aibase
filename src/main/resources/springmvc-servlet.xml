@@ -45,6 +45,7 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
 			<mvc:exclude-mapping path="/grid/**"/>
+			<mvc:exclude-mapping path="/tmpl/**"/>
 			<mvc:exclude-mapping path="/pages/data/grid.html"/>
 			<!--
 			<mvc:exclude-mapping path="/base/sendMark"/>
