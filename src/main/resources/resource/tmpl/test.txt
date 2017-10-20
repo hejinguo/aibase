@@ -1,0 +1,29 @@
+{
+	"templateCode":"",
+	"templateName":"测试",
+	"templateDesc":"描述"
+	"templateGroup":[
+		{
+			"groupCode":"",
+			"groupName":"",
+			"groupType":1,
+			"tableSchema":"DB2INST1",
+			"tableName":"SYS_STAFF",
+			"groupDesc":"",
+			templateItem:[
+				{
+					"itemCode":"",
+					"itemName":"",
+					"itemType":"",
+					"itemSource":"",
+					"itemValue":"",
+					"itemSpan":"",
+					"itemRegex":"",
+					"itemRegexTitle":"",
+					"itemRequire":"",
+					"itemDesc":""
+				}
+			]
+		}
+	]
+}

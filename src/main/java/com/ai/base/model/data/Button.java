@@ -16,7 +16,7 @@ public class Button implements Serializable {
 	private String type;//Dialog,Window,Redirect,Ajax,Function
 	private boolean confirm;//是否先提醒
 	private String url;//地址
-	private List<String> params;//传递参数
+	private List<String> params;//传递参数["STAFF_NAME>wd","STAFF_ID>id"]
 	
 	public String getClasss() {
 		return classs;
