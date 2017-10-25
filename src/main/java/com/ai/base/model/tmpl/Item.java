@@ -117,9 +117,9 @@ public class Item implements Serializable {
 
 	@Override
 	public String toString() {
-		return "TemplateItem [itemCode=" + itemCode + ", itemName=" + itemName + ", itemDesc="
-				+ itemDesc + ", itemType=" + itemType + ", itemSpan=" + itemSpan + ", itemSource=" + itemSource
-				+ ", itemRegex=" + itemRegex + ", itemRegexTitle=" + itemRegexTitle + ", selectList=" + selectList
-				+ "]";
+		return "Item [itemCode=" + itemCode + ", itemName=" + itemName + ", itemType=" + itemType + ", itemSource="
+				+ itemSource + ", itemValue=" + itemValue + ", itemSpan=" + itemSpan + ", itemRegex=" + itemRegex
+				+ ", itemRegexTitle=" + itemRegexTitle + ", itemRequire=" + itemRequire + ", itemDesc=" + itemDesc
+				+ ", selectList=" + selectList + "]";
 	}
 }

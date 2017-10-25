@@ -16,6 +16,8 @@ public class Group implements Serializable {
 	private String tableSchema;//分组表模;数据存储分组的表模
 	private String tableName;//分组表名;数据存储分组的表名
 	private String groupDesc;//分组描述;描述分组详情
+	private String groupPKey;//分组表中的主键
+	private String groupFKey;//分组表中的外键
 	
 	private List<Item> templateItem;//分组条目
 
@@ -75,10 +77,26 @@ public class Group implements Serializable {
 		this.templateItem = templateItem;
 	}
 	
+	public String getGroupPKey() {
+		return groupPKey;
+	}
+
+	public void setGroupPKey(String groupPKey) {
+		this.groupPKey = groupPKey;
+	}
+
+	public String getGroupFKey() {
+		return groupFKey;
+	}
+
+	public void setGroupFKey(String groupFKey) {
+		this.groupFKey = groupFKey;
+	}
+
 	@Override
 	public String toString() {
-		return "TemplateGroup [groupCode=" + groupCode + ", groupName=" + groupName
-				+ ", groupType=" + groupType + ", groupDesc=" + groupDesc
-				+ ", templateItem=" + templateItem + "]";
+		return "Group [groupCode=" + groupCode + ", groupName=" + groupName + ", groupType=" + groupType
+				+ ", tableSchema=" + tableSchema + ", tableName=" + tableName + ", groupDesc=" + groupDesc
+				+ ", groupPKey=" + groupPKey + ", groupFKey=" + groupFKey + ", templateItem=" + templateItem + "]";
 	}
 }

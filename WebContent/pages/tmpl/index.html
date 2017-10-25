@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>TW</title>
+		<link href="../../resources/common/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../resources/common/layout/layout-default-latest.css" rel="stylesheet">
+		<link href="../../resources/css/ai.core.css" rel="stylesheet">
+		<link href="../../resources/css/tmpl/index.css" rel="stylesheet">
+	    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	    <!--[if lt IE 9]>
+	      <script src="../../resources/common/html5shiv/html5shiv.min.js" type="text/javascript"></script>
+	      <script src="../../resources/common/respond/respond.min.js" type="text/javascript"></script>
+	    <![endif]-->
+	</head>
+	<body>
+		<div class="ui-layout-center">
+			<form id="_template_item_form">
+				<div id="_template_item_body"></div>
+			</form>
+		</div>
+		<div class="ui-layout-south">
+			<div id="_template_item_footer">
+				<button type="button" class="btn btn-default btn-sm" onclick="javascript:clickResetTemplateWriteBtn();">
+					<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+					重置
+				</button>
+				<button type="button" class="btn btn-success btn-sm hidden" onclick="javascript:clickSubmitTemplateWriteBtn();">
+					<span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+					提交
+				</button>
+				<button type="button" class="btn btn-warning btn-sm hidden" onclick="javascript:clickSubmitTemplateWriteBtn();">
+					<span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+					编辑
+				</button>
+			</div>
+		</div>
+		
+		<!-- ModalDialog -->
+		<div class="modal fade bs-example-modal-lg" id="_group_write_modal_dialog" tabindex="-1" role="dialog" aria-labelledby="_group_write_modal_label">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-body" id="_group_write_modal_body"></div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	    <script src="../../resources/common/jquery/jquery.min.js" type="text/javascript"></script>
+	    <!-- Include all compiled plugins (below), or include individual files as needed -->
+	    <script src="../../resources/common/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+	    <script src="../../resources/common/layout/jquery.layout-latest.js" type="text/javascript"></script>
+	    <script src="../../resources/common/moment/moment.js" type="text/javascript"></script>
+	    <script src="../../resources/common/art-template/art-template.min.js" type="text/javascript"></script>
+	    <script src="../../resources/common/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+	    <script src="../../resources/common/layer/layer.js" type="text/javascript"></script>
+	    <!--[if lt IE 9]>
+    		<script src="../../resources/common/json/json2.js"></script>
+		<![endif]--><!--使得IE8支持JSON.stringify-->
+	    <script src="../../resources/js/ai.core.js" type="text/javascript"></script>
+	    <script src="../../resources/js/tmpl/index.js" type="text/javascript"></script>
+		
+		<!-- 0源代码模式、1普通文本框、2日期选择框、3时间选择框、4日期时间选择框、5下拉框、6文本域、7编辑器、8单选框、9多选框、10文件选择 -->
+		<!-- glyphicon glyphicon-info-sign glyphicon glyphicon-question-sign -->
+		<!-- 加载模板对象 -->
+		<script id="_template_define_template" type="text/html">
+			{{if info}}
+				{{each info.templateGroup as group g}}
+					{{if group.groupType == 2 && (!group.groupIndex || group.groupIndex == 0)}}
+						<div class="form-group col-sm-12 text-center" id="_{{group.groupCode}}_buttons">
+							<button type="button" class="btn btn-info btn-xs" id="_{{group.groupCode}}_append_button"
+								data-toggle="tooltip" data-placement="bottom" title="已反馈的{{group.groupName}}请不要重复填报,可点击'查看已报{{group.groupName}}'按钮查看或编辑填报记录."
+								onclick="javascript:clickAppendTemplateGroupButton({{group.groupId}},'{{group.groupCode}}');" 
+									style="width:150px;">点击添加{{group.groupName}}</button>
+							<button type="button" class="btn btn-default btn-xs" id="_{{group.groupCode}}_display_button"
+								onclick="javascript:clickDisplayTemplateGroupButton({{group.groupId}},'{{group.groupCode}}');" 
+									style="width:150px;">查看已报{{group.groupName}}</button>
+						</div>
+						<!--<div class="col-sm-12" id="_{{group.groupCode}}_content" style="padding:0px;">-->
+					{{/if}}
+					<div id="_{{group.groupCode}}_{{group.groupIndex ? group.groupIndex : '0'}}">
+						<div class="page-header">
+							<h4>
+								<b>{{group.groupName}}</b>
+								{{if group.groupType == 2}}
+									<button type="button" class="btn btn-danger btn-xs pull-right" 
+										onclick="javascript:clickRemoveTemplateGroupButton({{group.groupIndex ? group.groupIndex : 0}},{{group.groupId}},'{{group.groupCode}}');" 
+											style="width:150px;">删除本行{{group.groupName}}</button>
+								{{/if}}
+							</h4>
+						</div>
+						<div class="container-fluid">
+							<div class="row">
+								{{each group.templateItem as item i}}
+									{{include '_'+item.itemType+'_item_template' item}}
+								{{/each}}
+							</div>
+						</div>
+					</div>
+					{{if group.groupType == 2 && (!group.groupIndex || group.groupIndex == 0)}}
+						</div>
+					{{/if}}
+				{{/each}}
+			{{/if}}
+		</script>
+		<!-- 增加的模板分组对象 -->
+		<script id="_template_group_template" type="text/html">
+			<div id="_{{groupCode}}_{{groupIndex ? groupIndex : '0'}}">
+				<div class="page-header">
+					<h4>
+						<b>{{groupName}}</b>
+						{{if groupType == 2}}
+							<button type="button" class="btn btn-danger btn-xs pull-right" 
+								onclick="javascript:clickRemoveTemplateGroupButton('{{groupIndex}}',{{groupId}},'{{groupCode}}');" 
+									style="width:150px;">删除本行{{groupName}}</button>
+						{{/if}}
+					</h4>
+				</div>
+				<div class="container-fluid">
+					<div class="row">
+						{{each templateItem as item i}}
+							{{include '_'+item.itemType+'_item_template' item}}
+						{{/each}}
+					</div>
+				</div>
+			</div>
+		</script>
+		
+		<!-- 普通文本框 -->
+		<script id="_1_item_template" type="text/html">
+			<div class="form-group col-sm-{{itemSpan}}">
+				<label for="_{{itemCode}}">
+					{{if itemRequire == 1}}<span class="text-red">*</span>{{/if}}
+					{{itemName}}
+					{{if itemRegex}}
+						<span class="glyphicon glyphicon-info-sign text-primary" aria-hidden="true" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}_tooltip"
+							data-toggle="tooltip" data-placement="bottom" title="{{itemName+itemRegexTitle}}"></span>
+					{{/if}}
+				</label>
+				<input type="text" class="form-control input-sm" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}" placeholder="请填写{{itemName}}" name="{{itemCode}}" value="{{itemValue}}"/>
+			</div>
+		</script>
+		<!-- 日期选择框 -->
+		<script id="_2_item_template" type="text/html">
+			<div class="form-group col-sm-{{itemSpan}}">
+				<label for="_{{itemCode}}">
+					{{if itemRequire == 1}}<span class="text-red">*</span>{{/if}}
+					{{itemName}}
+					{{if itemRegex}}
+						<span class="glyphicon glyphicon-info-sign text-primary" aria-hidden="true" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}_tooltip"
+							data-toggle="tooltip" data-placement="bottom" title="{{itemName+itemRegexTitle}}"></span>
+					{{/if}}
+				</label>
+				<input type="text" class="form-control input-sm" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}" placeholder="请选择{{itemName}}" name="{{itemCode}}" readOnly 
+					onclick="javascript:WdatePicker({dateFmt:'yyyy-MM-dd'});" value="{{itemValue}}"/>
+			</div>
+		</script>
+		<!-- 时间选择框 -->
+		<script id="_3_item_template" type="text/html">
+			<div class="form-group col-sm-{{itemSpan}}">
+				<label for="_{{itemCode}}">
+					{{if itemRequire == 1}}<span class="text-red">*</span>{{/if}}
+					{{itemName}}
+					{{if itemRegex}}
+						<span class="glyphicon glyphicon-info-sign text-primary" aria-hidden="true" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}_tooltip"
+							data-toggle="tooltip" data-placement="bottom" title="{{itemName+itemRegexTitle}}"></span>
+					{{/if}}
+				</label>
+				<input type="text" class="form-control input-sm" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}" placeholder="请选择{{itemName}}" name="{{itemCode}}" readOnly 
+					onclick="javascript:WdatePicker({dateFmt:'HH:mm:ss'});" value="{{itemValue}}"/>
+			</div>
+		</script>
+		<!-- 日期时间选择框 -->
+		<script id="_4_item_template" type="text/html">
+			<div class="form-group col-sm-{{itemSpan}}">
+				<label for="_{{itemCode}}">
+					{{if itemRequire == 1}}<span class="text-red">*</span>{{/if}}
+					{{itemName}}
+					{{if itemRegex}}
+						<span class="glyphicon glyphicon-info-sign text-primary" aria-hidden="true" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}_tooltip"
+							data-toggle="tooltip" data-placement="bottom" title="{{itemName+itemRegexTitle}}"></span>
+					{{/if}}
+				</label>
+				<input type="text" class="form-control input-sm" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}" placeholder="请选择{{itemName}}" name="{{itemCode}}" readOnly 
+					onclick="javascript:WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'});" value="{{itemValue}}"/>
+			</div>
+		</script>
+		<!-- 下拉框 -->
+		<script id="_5_item_template" type="text/html">
+			<div class="form-group col-sm-{{itemSpan}}">
+				<label for="_{{itemCode}}">
+					{{if itemRequire == 1}}<span class="text-red">*</span>{{/if}}
+					{{itemName}}
+					{{if itemRegex}}
+						<span class="glyphicon glyphicon-info-sign text-primary" aria-hidden="true" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}_tooltip"
+							data-toggle="tooltip" data-placement="bottom" title="{{itemName+itemRegexTitle}}"></span>
+					{{/if}}
+				</label>
+				<select class="form-control input-sm" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}" name="{{itemCode}}">
+					{{each selectList as item i}}
+						{{if itemValue}}
+							<option value="{{item.value}}" {{item.value == itemValue ? 'selected' : ''}}>{{item.text}}</option>
+						{{else}}
+							<option value="{{item.value}}" {{i == 0 ? 'selected' : ''}}>{{item.text}}</option>
+						{{/if}}
+					{{/each}}
+				</select>
+			</div>
+		</script>
+		<!-- 文本域 -->
+		<script id="_6_item_template" type="text/html">
+			<div class="form-group col-sm-{{itemSpan}}">
+				<label for="_{{itemCode}}">
+					{{if itemRequire == 1}}<span class="text-red">*</span>{{/if}}
+					{{itemName}}
+					{{if itemRegex}}
+						<span class="glyphicon glyphicon-info-sign text-primary" aria-hidden="true" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}_tooltip"
+							data-toggle="tooltip" data-placement="bottom" title="{{itemName+itemRegexTitle}}"></span>
+					{{/if}}
+				</label>
+				<textarea class="form-control input-sm" rows="5" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}" placeholder="请填写{{itemName}}" name="{{itemCode}}">{{itemValue}}</textarea>
+			</div>
+		</script>
+		<!-- 编辑器 -->
+		<script id="_7_item_template" type="text/html">
+			尚未实现编辑器组件
+		</script>
+		<!-- 单选框 -->
+		<script id="_8_item_template" type="text/html">
+			<div class="form-group col-sm-{{itemSpan}}">
+				<label for="_{{itemCode}}_0">
+					{{if itemRequire == 1}}<span class="text-red">*</span>{{/if}}
+					{{itemName}}
+					{{if itemRegex}}
+						<span class="glyphicon glyphicon-info-sign text-primary" aria-hidden="true" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}_tooltip"
+							data-toggle="tooltip" data-placement="bottom" title="{{itemName+itemRegexTitle}}"></span>
+					{{/if}}
+				</label>
+				<div>
+					{{selectList}}
+					{{each selectList as item i}}
+						<label class="radio-inline" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}">
+							{{if itemValue}}
+								<input type="radio" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}_{{i}}" name="{{itemCode}}" value="{{item.value}}" {{item.value == itemValue ? 'checked' : ''}}> {{item.text}}
+							{{else}}
+								<input type="radio" id="_{{itemCode}}_{{groupIndex ? groupIndex : '0'}}_{{i}}" name="{{itemCode}}" value="{{item.value}}" {{i == 0 ? 'checked' : ''}}> {{item.text}}
+							{{/if}}
+						</label>
+					{{/each}}
+				</div>
+			</div>
+		</script>
+		<!-- 拓展按钮 -->
+		<!-- 
+		<script id="_11_item_template" type="text/html">
+			<div class="form-group col-sm-12 text-center">
+				<button type="button" class="btn btn-info btn-xs" id="_{{itemCode}}_button" onclick="javascript:clickAppendTemplateItemButton({{itemId}},'{{itemCode}}');" style="width:250px;">点击添加{{itemName}}</button>
+			</div>
+			<div class="col-sm-12" id="_{{itemCode}}_content"></div>
+		</script>
+		 -->
+		 <!-- 查看历史填报的拓展分组记录 --><!-- {{item.writeId}} -->
+		 <script id="_group_write_record_template" type="text/html">
+		 	<table class="table table-bordered table-condensed">
+		 		<tbody>
+		 			{{each list as item i}}
+						<tr class="bg-info text-info">
+							<th colspan="{{item.writeIndex && item.writeIndex.length > 0 ? item.writeIndex[0].writeDetail.length : 1}}">
+								<span>填报时间：{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</span>
+								<button type="button" class="btn btn-xs btn-warning pull-right" onclick="javascript:clickModifyWriteHistoryButton({{item.writeId}})">编辑</button>
+							</th>
+						</tr>
+						{{each item.writeIndex as index x}}
+							{{if x == 0}}
+								<tr>
+									{{each index.writeDetail as detail d}}
+										<th>{{detail.itemName}}</th>
+									{{/each}}
+								</tr>
+							{{/if}}
+							<tr>
+								{{each index.writeDetail as detail d}}
+									<td>{{detail.itemValue}}</td>
+								{{/each}}
+							</tr>
+						{{/each}}
+					{{/each}}
+				</tbody>
+			</table>
+			<div class="row">
+				<div class="col-xs-6">
+					<div style="padding-top:5px;">共{{total}}条记录,第{{pageNum}}页/共{{pages}}页 </div>
+				</div>
+				<div class="col-xs-6 text-right">
+					<nav aria-label="Page navigation">
+						<ul class="pagination pagination-sm">
+							<li class="{{hasPreviousPage ? '' : 'disabled'}}"><a href="javascript:clickChangeWritePageNumBtn({{prePage}},'expand');" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+								{{each navigatepageNums as value i}}
+									<li class="{{pageNum == value ? 'active' : ''}}"><a href="javascript:clickChangeWritePageNumBtn({{value}},'expand');">{{value}}</a></li>
+								{{/each}}
+							<li class="{{hasNextPage ? '' : 'disabled'}}"><a href="javascript:clickChangeWritePageNumBtn({{nextPage}},'expand');" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		 </script>
+	</body>
+</html>

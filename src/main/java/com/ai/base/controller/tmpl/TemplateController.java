@@ -1,8 +1,5 @@
 package com.ai.base.controller.tmpl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,10 +47,15 @@ public class TemplateController {
 	    	if(!StringUtils.isEmpty(grid.getDataSource())){
 	    		DbContextHolder.clearDbType();
 	    	}*/
-	    	Map<String,Object> resultMap = new HashMap<String,Object>();
+	    	
+	    	System.out.println(template);
+	    	
+	    	/*Map<String,Object> resultMap = new HashMap<String,Object>();
 	    	resultMap.put("template", template);
 //	    	resultMap.put("data", data);
-	    	return new ResultObject<Object>(true, resultMap);
+	    	return new ResultObject<Object>(true, resultMap);*/
+	    	
+	    	return new ResultObject<Template>(true, template);
 		} catch (Exception e) {
 			return new ResultObject<Object>(e);
 		} finally{

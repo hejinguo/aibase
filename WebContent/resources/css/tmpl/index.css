@@ -1,0 +1,32 @@
+body{
+	padding:0px;
+}
+
+.ui-layout-south{
+	text-align:right;
+}
+
+.checkbox-inline, .radio-inline{
+	margin-left:0px;
+	margin-right:10px;
+}
+.checkbox-inline+.checkbox-inline, .radio-inline+.radio-inline{
+	margin:2px 0px;
+	margin-right:10px;
+}
+
+#_template_item_form label{
+	font-weight:normal;
+}
+#_template_item_form .page-header{
+	margin:0px 15px;
+	padding-bottom:0px;
+	margin-bottom:5px;
+}
+#_template_item_form .page-header h4{
+	font-size:16px;
+}
+
+.table-condensed>tbody>tr>td,.table-condensed>tbody>tr>th{
+	padding:3px;
+}

@@ -50,7 +50,7 @@ public class Template implements Serializable {
 
 	@Override
 	public String toString() {
-		return "TemplateDefine [templateCode=" + templateCode + ", templateName="
-				+ templateName + ", templateDesc=" + templateDesc+ ", templateGroup=" + templateGroup + "]";
+		return "Template [templateCode=" + templateCode + ", templateName=" + templateName + ", templateDesc="
+				+ templateDesc + ", templateGroup=" + templateGroup + "]";
 	}
 }
