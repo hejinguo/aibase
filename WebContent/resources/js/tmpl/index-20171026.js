@@ -15,7 +15,28 @@ var pageData = {
 $(function(){
 	initMainPageLayout();
 	loadTemplateItemRecord();
+	//loadTemplateWriteUnit();
 });
+
+/**
+ * 加载模板填报集团
+ */
+function loadTemplateWriteUnit(){
+	if(pageData.param.unitId){
+		ai.ajax('../../unit/get',{unitId:pageData.param.unitId},function(data){
+			if(data.state){
+				pageData.unit = data.info;
+				if(pageData.template && pageData.template.templateCode && pageData.unit && pageData.unit.unitId && !pageData.param.modifyWriteId){
+					$('#_template_item_footer button:eq(1)').removeClass("hidden");
+				}
+			}
+		});
+	}else if(pageData.param.modifyWriteId){
+		//存在编辑记录ID时不考虑集团信息,直接启用编辑按钮即可
+	}else{
+		ai.alert('不合法的请求,因为您没有提供填报必须的参数信息!');
+	}
+}
 
 /**
  * 加载填报模板条目
@@ -39,7 +60,7 @@ function loadTemplateItemRecord(){
 				pageData.template = data.info;
 				$('#_template_item_body').html(template('_template_define_template',data));
 				$('[data-toggle="tooltip"]').tooltip();
-//				pageData.template && pageData.template.templateCode && pageData.unit && pageData.unit.unitId && !pageData.param.modifyWriteId
+				// pageData.template && pageData.template.templateCode && pageData.unit && pageData.unit.unitId && !pageData.param.modifyWriteId
 //				if(pageData.template && pageData.template.templateCode && pageData.unit && pageData.unit.unitId){
 				if(pageData.template && pageData.template.templateCode){
 					$('#_template_item_footer button:eq(1)').removeClass("hidden");
@@ -78,10 +99,6 @@ function clickSubmitTemplateWriteBtn(){
 				url = "../../template/writeRecord";
 			}
 			var writeRecord = _generateWriteRecord();
-			
-			alert(JSON.stringify(writeRecord));
-			
-			/*
 			ai.json(url,JSON.stringify(writeRecord),function(data){
 				if(data.state){
 					var resultMsg = pageData.template.templateName+' 成功!';
@@ -104,7 +121,6 @@ function clickSubmitTemplateWriteBtn(){
 			},function(){},function(){
 				ai.closeMask();
 			});
-			*/
 		});
 	}
 }
@@ -150,6 +166,48 @@ function clickRemoveTemplateGroupButton(groupIndex,groupId,groupCode){
 }
 
 /**
+ * 点击查看已经填报的分组克隆表单
+ * @param groupId
+ * @param groupCode
+ */
+function clickDisplayTemplateGroupButton(groupId,groupCode){
+	ai.openMask();
+	pageData.display = {unitId:pageData.param.unitId,groupId:groupId,pageNum:1,pageSize:2};
+	ai.ajax('../../template/getWriteByGroup',pageData.display,function(data){
+		if(data.state){
+			$('#_group_write_modal_body').html(template('_group_write_record_template',data.info));
+			$('#_group_write_modal_dialog').modal('show');
+		}
+	},function(){},function(){
+		ai.closeMask();
+	});
+}
+
+/**
+ * 分页查看已经填报的分组克隆表单
+ */
+function clickChangeWritePageNumBtn(pageNum,writeType){
+	ai.openMask();
+	pageData.display.pageNum = pageNum;
+	ai.ajax('../../template/getWriteByGroup',pageData.display,function(data){
+		if(data.state){
+			$('#_group_write_modal_body').html(template('_group_write_record_template',data.info));
+		}
+	},function(){},function(){
+		ai.closeMask();
+	});
+}
+
+/**
+ * 点击编辑历史填报记录的按钮
+ */
+function clickModifyWriteHistoryButton(writeId){
+	ai.confirm('确认','将暂时跳离当前填报页面,您确定要继续进行编辑操作吗?',function(){
+		document.location.href= 'index.html?unit='+pageData.param.unitId+'&mwrite='+writeId;
+	});
+}
+
+/**
  * 填报模板表单验证
  * @returns {Boolean}
  */
@@ -172,24 +230,24 @@ function _validTemplateItemForm(){
  */
 function _generateWriteRecord(){
 	var writeRecord = {templateId:pageData.template.templateId,templateCode:pageData.template.templateCode,writeDetail:[]};
-//	if(pageData.param.unitId && pageData.param.unitId > 0){
-//		writeRecord.unitId = pageData.param.unitId;
-//	}
-//	if(pageData.param.parentWriteId && pageData.param.parentWriteId > 0){//填报时需建立填报关系的父模板
-//		writeRecord.parentWriteId = pageData.param.parentWriteId;
-//	}
-//	if(pageData.param.productId && 'BUILD_ARCHIVE' == pageData.param.templateCode){//创建商机档案
-//		writeRecord.writeArchive = {unitId:pageData.param.unitId,productId:pageData.param.productId};
-//	}else if(pageData.param.archiveId && pageData.param.archiveId > 0){//基于商机档案填报的模板
-//		writeRecord.writeArchive = {archiveId:pageData.param.archiveId};
-//	}
+	if(pageData.param.unitId && pageData.param.unitId > 0){
+		writeRecord.unitId = pageData.param.unitId;
+	}
+	if(pageData.param.parentWriteId && pageData.param.parentWriteId > 0){//填报时需建立填报关系的父模板
+		writeRecord.parentWriteId = pageData.param.parentWriteId;
+	}
+	if(pageData.param.productId && 'BUILD_ARCHIVE' == pageData.param.templateCode){//创建商机档案
+		writeRecord.writeArchive = {unitId:pageData.param.unitId,productId:pageData.param.productId};
+	}else if(pageData.param.archiveId && pageData.param.archiveId > 0){//基于商机档案填报的模板
+		writeRecord.writeArchive = {archiveId:pageData.param.archiveId};
+	}
 	$.each(pageData.template.templateGroup,function(g,group){
 		$.each(group.templateItem,function(i,item){
 			writeRecord.writeDetail.push({
-//				groupId:group.groupId,
+				groupId:group.groupId,
 				groupCode:group.groupCode,
-//				groupIndex:(group.groupIndex ? group.groupIndex : 0),
-//				itemId:item.itemId,
+				groupIndex:(group.groupIndex ? group.groupIndex : 0),
+				itemId:item.itemId,
 				itemCode:item.itemCode,
 				itemType:item.itemType,
 				itemValue:_getItemValueByType(item)

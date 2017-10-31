@@ -1,7 +1,6 @@
 package com.ai.base.controller.tmpl;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,9 +18,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping("/tmpl")
 public class TemplateController {
 	
+	/**
+	 * 获取模板定义
+	 * @param code
+	 * @return
+	 */
 	@RequestMapping("/getTemplateInfo")
-	public Object getTemplateInfo(@RequestParam(required=true)String code,
-			HttpServletRequest request){
+	public Object getTemplateInfo(@RequestParam(required=true)String code){
 		Template template = null;
 	    try {
 	    	String define = null;//No.1:FTP文件,No.2:APP文件,No.3：数据库
@@ -33,9 +36,7 @@ public class TemplateController {
 	    	}else if("DB".equalsIgnoreCase(instance.get("source.type"))){
 	    		define = "";
 	    	}
-	    	
 	    	System.out.println(define);
-	    	
 	    	ObjectMapper mapper = new ObjectMapper();
 	    	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);//忽略不需要的多余字段
 	    	mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);//tab空格换行等控制字符
@@ -47,14 +48,7 @@ public class TemplateController {
 	    	if(!StringUtils.isEmpty(grid.getDataSource())){
 	    		DbContextHolder.clearDbType();
 	    	}*/
-	    	
 	    	System.out.println(template);
-	    	
-	    	/*Map<String,Object> resultMap = new HashMap<String,Object>();
-	    	resultMap.put("template", template);
-//	    	resultMap.put("data", data);
-	    	return new ResultObject<Object>(true, resultMap);*/
-	    	
 	    	return new ResultObject<Template>(true, template);
 		} catch (Exception e) {
 			return new ResultObject<Object>(e);
@@ -63,5 +57,18 @@ public class TemplateController {
 	    		DbContextHolder.clearDbType();
 	    	}*/
 		}
+	}
+	
+	/**
+	 * 提交模板内容
+	 * @param template
+	 * @return
+	 */
+	@RequestMapping("/saveTemplateInfo")
+	public Object saveTemplateInfo(@RequestBody Template template){
+		
+		
+		
+		return null;
 	}
 }
